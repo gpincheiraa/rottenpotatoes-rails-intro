@@ -4,11 +4,11 @@
 %table#movies
   %thead
     %tr
-      %th#title_header{class: ('hilite' if @order_param == "title")}= link_to('Movie Title', '/movies?order=title')
-        
+      %th{class: ('hilite' if @order_param == "title")}
+        %a#title_header{href: '/movies?order=title'} Movie Title
       %th Rating
-      %th#release_date_header{class: ('hilite' if @order_param == "release_date")}= link_to('Release Date', '/movies?order=release_date')
-         
+      %th{class: ('hilite' if @order_param == "release_date")}
+        %a#release_date_header{href: '/movies?order=release_date'} Release Date
       %th More Info
   %tbody
     - @movies.each do |movie|
