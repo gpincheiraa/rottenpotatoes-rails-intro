@@ -1,5 +1,4 @@
 class MoviesController < ApplicationController
-
   def movie_params
     params.require(:movie).permit(:title, :rating, :description, :release_date)
   end
@@ -12,6 +11,9 @@ class MoviesController < ApplicationController
 
   def index
     
+    
+    @all_ratings = Movie.ratings
+
     if(params[:order])      
       @order_param = params[:order]
       case @order_param
@@ -27,6 +29,9 @@ class MoviesController < ApplicationController
         else
           flash[:warning] = 'The order specified it\'s not defined'
       end
+    elsif(params[:ratings])
+      @movies = Movie
+                  .where(rating: params[:ratings].keys)
     else
       @movies = Movie.all
     end
