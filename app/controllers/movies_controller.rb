@@ -11,7 +11,25 @@ class MoviesController < ApplicationController
   end
 
   def index
-    @movies = Movie.all
+    
+    if(params[:order])      
+      @order_param = params[:order]
+      case @order_param
+        when 'title'
+          @movies = Movie.all.order(:title)
+
+          puts "*********************************"
+          puts @movies, @order_param
+          puts "*********************************"
+          
+        when 'release_date'
+          @movies = Movie.all.order(:release_date)
+        else
+          flash[:warning] = 'The order specified it\'s not defined'
+      end
+    else
+      @movies = Movie.all
+    end
   end
 
   def new
