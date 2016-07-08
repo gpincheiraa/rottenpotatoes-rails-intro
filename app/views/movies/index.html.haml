@@ -12,10 +12,10 @@
   %thead
     %tr
       %th{class: ('hilite' if @order_param == "title")}
-        %a#title_header{href: '/movies?order=title'} Movie Title
+        %a#title_header{href: "/movies?order=title#{@ratings_params}"} Movie Title
       %th Rating
       %th{class: ('hilite' if @order_param == "release_date")}
-        %a#release_date_header{href: '/movies?order=release_date'} Release Date
+        %a#release_date_header{href: "/movies?order=release_date#{@ratings_params}"} Release Date
       %th More Info
   %tbody
     - @movies.each do |movie|

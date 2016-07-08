@@ -11,27 +11,50 @@ class MoviesController < ApplicationController
 
   def index
     
+    #Expose this variables to the view
+    @all_ratings = Movie.ratings  
     
-    @all_ratings = Movie.ratings
-
-    if(params[:order])      
+    if(params[:order])
+      #track the order state
+      session[:order] = params[:order]
       @order_param = params[:order]
+      
       case @order_param
         when 'title'
-          @movies = Movie.all.order(:title)
 
-          puts "*********************************"
-          puts @movies, @order_param
-          puts "*********************************"
+          if(session[:ratings])
+            @movies = Movie
+                        .where(rating: session[:ratings].keys)
+                        .order(:title)
+          else
+            @movies = Movie.all.order(:title)
+          end
           
         when 'release_date'
-          @movies = Movie.all.order(:release_date)
+           if(session[:ratings])
+            @movies = Movie
+                        .where(rating: session[:ratings].keys)
+                        .order(:title)
+          else
+            @movies = Movie.all.order(:release_date)
+          end
         else
           flash[:warning] = 'The order specified it\'s not defined'
       end
+    
     elsif(params[:ratings])
-      @movies = Movie
-                  .where(rating: params[:ratings].keys)
+      
+      #track the params for future usage
+      session[:ratings] = params[:ratings]
+
+      #Build the url params with the ratings params 
+      ratings_array = []
+      params[:ratings].each do |k, v|
+        ratings_array.push("ratings=#{k}")
+      end
+      ratings_query = ratings_array.join('&')
+      @ratings_params = "&#{ratings_query}"
+      @movies = Movie.where(rating: params[:ratings].keys)
     else
       @movies = Movie.all
     end
