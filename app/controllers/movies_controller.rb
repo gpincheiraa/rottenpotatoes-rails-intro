@@ -17,19 +17,25 @@ class MoviesController < ApplicationController
     @all_ratings = Movie.ratings
     @movies = Movie.all
     
-    @order = params[:order] || flash[:order]
-    @ratings = params[:ratings] || flash[:ratings]
+    @order = params[:order] || session[:order]
+    @ratings = params[:ratings] || session[:ratings]
     
     if(@order)
-      flash[:order] = @order
+      session[:order] = @order
       @movies = @movies.order(@order)
     end
     
     if(@ratings)
-      flash[:ratings] = @ratings
+      session[:ratings] = @ratings
       @movies = @movies.where(rating: @ratings.keys)
     end
-       
+    
+    if params[:order] != session[:order] or params[:ratings] != session[:ratings]
+      session[:order] = @order
+      session[:ratings] = @selected_ratings
+      redirect_to :order => @order, :ratings => @ratings and return
+    end
+
   end
 
   def new
