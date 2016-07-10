@@ -13,27 +13,20 @@ class MoviesController < ApplicationController
   end
 
   def index
-    
     #Expose this variables to the view
     @all_ratings = Movie.ratings
     @movies = Movie.all
     
-    @order = params[:order] || session[:order]
-    @ratings = params[:ratings] || session[:ratings]
-
-    if(session[:order] && session[:ratings])
-      session.delete(:order)
-      session.delete(:ratings)
-      redirect_to movies_path(order: @order, ratings: @ratings)
-    end
-
+    @order = params[:order] || flash[:order]
+    @ratings = params[:ratings] || flash[:ratings]
+    
     if(@order)
-      session[:order] = @order
+      flash[:order] = @order
       @movies = @movies.order(@order)
     end
     
     if(@ratings)
-      session[:ratings] = @ratings
+      flash[:ratings] = @ratings
       @movies = @movies.where(rating: @ratings.keys)
     end
        
