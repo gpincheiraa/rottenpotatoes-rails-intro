@@ -16,24 +16,27 @@ class MoviesController < ApplicationController
     #Expose this variables to the view
     @all_ratings = Movie.ratings
     @movies = Movie.all
-    
-    @order = params[:order] || session[:order]
+    #Store the criteria for show movies
+    @sort = params[:sort] || session[:sort]
     @ratings = params[:ratings] || session[:ratings]
     
-    if(@order)
-      session[:order] = @order
-      @movies = @movies.order(@order)
+    #Check the type of sort has been requested for get the movies based in the sort value
+    if(@sort)
+      session[:sort] = @sort
+      @movies = @movies.sort(@sort)
     end
     
+    #Check the if the ratings has been requested for get the movies based in their rating
     if(@ratings)
       session[:ratings] = @ratings
       @movies = @movies.where(rating: @ratings.keys)
     end
     
-    if params[:order] != session[:order] or params[:ratings] != session[:ratings]
-      session[:order] = @order
+    #Check if the entry params are different than the stored previously for updating the RESTful route
+    if params[:sort] != session[:sort] or params[:ratings] != session[:ratings]
+      session[:sort] = @sort
       session[:ratings] = @selected_ratings
-      redirect_to :order => @order, :ratings => @ratings and return
+      redirect_to :sort => @sort, :ratings => @ratings and return
     end
 
   end
