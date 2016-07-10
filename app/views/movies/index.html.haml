@@ -7,9 +7,6 @@
     = rating
     = check_box_tag "ratings[#{rating}]", 1, @ratings ? (@ratings.keys.include?(rating) ? true : false) : true
   = submit_tag 'Refresh', :id => 'ratings_submit'
-
-%h1= @ratings? @ratings.keys : 'no'
-
 %table#movies
   %thead
     %tr
