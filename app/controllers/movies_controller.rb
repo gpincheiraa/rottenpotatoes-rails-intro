@@ -23,7 +23,7 @@ class MoviesController < ApplicationController
     #Check the type of sort has been requested for get the movies based in the sort value
     if(@sort)
       session[:sort] = @sort
-      @movies = @movies.sort(@sort)
+      @movies = @movies.order(@sort)
     end
     
     #Check the if the ratings has been requested for get the movies based in their rating
