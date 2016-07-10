@@ -1,4 +1,7 @@
 class MoviesController < ApplicationController
+
+  include MoviesHelper
+
   def movie_params
     params.require(:movie).permit(:title, :rating, :description, :release_date)
   end
@@ -12,52 +15,22 @@ class MoviesController < ApplicationController
   def index
     
     #Expose this variables to the view
-    @all_ratings = Movie.ratings  
+    @all_ratings = Movie.ratings
+    @movies = Movie.all
     
-    if(params[:order])
-      #track the order state
-      session[:order] = params[:order]
-      @order_param = params[:order]
-      
-      case @order_param
-        when 'title'
+    @order = params[:order] || session[:order]
+    @ratings = params[:ratings] || session[:ratings]
 
-          if(session[:ratings])
-            @movies = Movie
-                        .where(rating: session[:ratings].keys)
-                        .order(:title)
-          else
-            @movies = Movie.all.order(:title)
-          end
-          
-        when 'release_date'
-           if(session[:ratings])
-            @movies = Movie
-                        .where(rating: session[:ratings].keys)
-                        .order(:title)
-          else
-            @movies = Movie.all.order(:release_date)
-          end
-        else
-          flash[:warning] = 'The order specified it\'s not defined'
-      end
-    
-    elsif(params[:ratings])
-      
-      #track the params for future usage
-      session[:ratings] = params[:ratings]
-
-      #Build the url params with the ratings params 
-      ratings_array = []
-      params[:ratings].each do |k, v|
-        ratings_array.push("ratings=#{k}")
-      end
-      ratings_query = ratings_array.join('&')
-      @ratings_params = "&#{ratings_query}"
-      @movies = Movie.where(rating: params[:ratings].keys)
-    else
-      @movies = Movie.all
+    if(@order)
+      session[:order] = @order
+      @movies = @movies.order(@order)
     end
+    
+    if(@ratings)
+      session[:ratings] = @ratings
+      @movies = @movies.where(rating: @ratings.keys)
+    end
+       
   end
 
   def new
