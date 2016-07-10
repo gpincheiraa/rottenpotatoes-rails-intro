@@ -35,7 +35,7 @@ class MoviesController < ApplicationController
     #Check if the entry params are different than the stored previously for updating the RESTful route
     if params[:sort] != session[:sort] or params[:ratings] != session[:ratings]
       session[:sort] = @sort
-      session[:ratings] = @selected_ratings
+      session[:ratings] = @ratings
       redirect_to :sort => @sort, :ratings => @ratings and return
     end
 
