@@ -21,6 +21,12 @@ class MoviesController < ApplicationController
     @order = params[:order] || session[:order]
     @ratings = params[:ratings] || session[:ratings]
 
+    if(session[:order] && session[:ratings])
+      session.delete(:order)
+      session.delete(:ratings)
+      redirect_to movies_path(order: @order, ratings: @ratings)
+    end
+
     if(@order)
       session[:order] = @order
       @movies = @movies.order(@order)
